@@ -9,7 +9,9 @@ class Solution{
   private:
   int maxp = 0;
   std::unordered_map<float, int> umap;
+  std::vector<std::vector<int>> umap2; // vector of all. later find unique points.
   float slope = 0;
+  bool slope_valid = false;
   public:
   int maxPoints(std::vector<std::vector<int>>& points) {
         int numP = points.size();
@@ -23,30 +25,57 @@ class Solution{
         {
             a = points[i];
             std::cout<<"i = " << i << std::endl;
-            for(j=numP-1;j>0;j--)
+            for(j=i+1;j<numP;j++)
             {
-                if(i==j) {slope = 0;}
+                b = points[j];
+                 std::cout<<"a = ["<< a[0] <<" , " << a[1] <<"] \t";
+                 std::cout<<"b = ["<< b[0] <<" , " << b[1] <<"] \t";
+                if((a[0]==b[0])&&(a[1]==b[1])) 
+                {
+                    slope_valid = false;
+                    std::cout<<"Slope = "<<slope<<"\n";
+                }
                 else
                 {
-                b = points[j];
-                if(b[0]-a[0] > 0)
-                slope = float((b[1]-a[1])/(b[0]-a[0]));
-                else slope = 0;
+                if(b[0]-a[0] != 0) // avoid divide by zero
+                {
+                    slope = float(float(b[1]-a[1])/float(b[0]-a[0]));
+                    std::cout<<"Slope = "<<slope<<"\n";
+                    slope_valid = true;
+                    
+                }
+                else 
+                {
+                    slope_valid = false;
+                   std::cout<<"special set  "<<"\n";
+                }
+                
                 }
 
-              if(slope!=0)
+              if(slope_valid == true)
               {
                   //handle the map
                   auto it = umap.find(slope);
                   if (it != umap.end()) {
         // Key found, access the corresponding value
-       std::cout << "Slope " << slope << " with value " << it->second << "\n";
+       //std::cout << "Slope " << slope << " with value " << it->second << "\n";
         umap[slope] = it->second + 1;
+        umap2.push_back(a);
+        umap2.push_back(b);
+        
+      
+  
     } else {
         // Key not found
-       std::cout << "Slope " << slope << " not found in the map. Add it to map\n";
+       //std::cout << "Slope " << slope << " not found in the map. Add it to map\n";
         umap.insert(std::make_pair(slope, 1));
+        umap2.push_back(a);
+        umap2.push_back(b);
     }
+              }
+              else
+              {
+                 // std::cout<<"Slope = 0"<<std::endl;
               }
               
             }
@@ -57,8 +86,22 @@ class Solution{
             slope = pair.first; // Keep track of the key for the max value
         }
     }
+    
         std::cout<<"max slope" << slope << std::endl;
         std::cout<<"max points" << maxp << std::endl;
+        numP = umap2.size();
+        std::cout<<"size of umap2" << std::endl;
+        /*for(i=0;i<numP-1;i++)
+        {
+            a = points[i];
+            std::cout<<"i = " << i << std::endl;
+            for(j=i+1;j<numP;j++)
+            {
+                b = points[j];
+                 std::cout<<"a = ["<< a[0] <<" , " << a[1] <<"] \t";
+                 std::cout<<"b = ["<< b[0] <<" , " << b[1] <<"] \t";
+            }
+        }*/
         return maxp;
     }
 };
