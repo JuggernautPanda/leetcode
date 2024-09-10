@@ -5,11 +5,13 @@ Given an array of points where points[i] = [xi, yi] represents a point on the X-
 #include <iostream>
 #include <vector>
 #include <unordered_map>
+#include <limits>
 class Solution{
   private:
   int maxp = 0;
   std::unordered_map<float, int> umap;
   std::vector<std::vector<int>> umap2; // vector of all. later find unique points.
+  std::unordered_map<float, std::vector<std::vector<int>>> umap3; // Add vectors for a single float slope.
   float slope = 0;
   bool slope_valid = false;
   public:
@@ -33,6 +35,7 @@ class Solution{
                 if((a[0]==b[0])&&(a[1]==b[1])) 
                 {
                     slope_valid = false;
+                    slope = 0;
                     std::cout<<"Slope = "<<slope<<"\n";
                 }
                 else
@@ -46,8 +49,9 @@ class Solution{
                 }
                 else 
                 {
-                    slope_valid = false;
-                   std::cout<<"special set  "<<"\n";
+                    slope = std::numeric_limits<double>::infinity();
+                    slope_valid = true;
+                   std::cout<<"Slope = inf "<<"\n";
                 }
                 
                 }
@@ -81,27 +85,31 @@ class Solution{
             }
         }
         for (const auto& pair : umap) {
+            std::cout<<"Slope = "<<pair.first<<"\t Num of points = "<<pair.second<<"\n";
         if (pair.second > maxp) {
             maxp = pair.second;
             slope = pair.first; // Keep track of the key for the max value
         }
     }
     
+    
         std::cout<<"max slope" << slope << std::endl;
         std::cout<<"max points" << maxp << std::endl;
-        numP = umap2.size();
-        std::cout<<"size of umap2" << std::endl;
-        /*for(i=0;i<numP-1;i++)
+       // numP = umap2.size();
+        //std::cout<<"size of umap2" << numP <<std::endl;
+        
+    /*   for(i=0;i<numP-1;i++)
         {
-            a = points[i];
-            std::cout<<"i = " << i << std::endl;
+            a = umap2[i];
+            std::cout<<"\ni = " << i << "\t";
             for(j=i+1;j<numP;j++)
             {
-                b = points[j];
+                b = umap2[j];
                  std::cout<<"a = ["<< a[0] <<" , " << a[1] <<"] \t";
                  std::cout<<"b = ["<< b[0] <<" , " << b[1] <<"] \t";
             }
         }*/
+        
         return maxp;
     }
 };
